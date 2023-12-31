@@ -80,7 +80,7 @@ async function onSubmit() {
         <div class="col-md-8 col-lg-6 col-xl-4">
           <!-- Sign In Block -->
           <BaseBlock title="Sign In" class="mb-0">
-            <template #options>
+            <!-- <template #options>
               <RouterLink
                 :to="{ name: 'auth-reminder' }"
                 class="btn-block-option fs-sm"
@@ -92,7 +92,7 @@ async function onSubmit() {
               >
                 <i class="fa fa-user-plus"></i>
               </RouterLink>
-            </template>
+            </template> -->
 
             <div class="p-sm-3 px-lg-4 px-xxl-5 py-lg-5">
               <h1 class="h2 mb-1">OneUI</h1>
