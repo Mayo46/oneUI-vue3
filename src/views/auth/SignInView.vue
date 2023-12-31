@@ -2,11 +2,20 @@
 import { reactive, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useTemplateStore } from "@/stores/template";
-
+import axios from "axios"
 // Vuelidate, for more info and examples you can check out https://github.com/vuelidate/vuelidate
 import useVuelidate from "@vuelidate/core";
 import { required, minLength } from "@vuelidate/validators";
+import Swal from "sweetalert2";
 
+// Set default properties
+let toast = Swal.mixin({
+  buttonsStyling: false,
+  toast: true,
+   position: "top",
+    showConfirmButton: false, 
+    timer: 3000
+});
 // Main store and Router
 const store = useTemplateStore();
 const router = useRouter();
@@ -37,14 +46,29 @@ const v$ = useVuelidate(rules, state);
 // On form submission
 async function onSubmit() {
   const result = await v$.value.$validate();
-
   if (!result) {
     // notify user form is invalid
     return;
   }
+  axios.post('https://api.dnic.cloud/auth/token',{
+            username: state.username, password: state.password
+           })
+            .then(response => {
+              // console.log('d',response.data.token)
+                // Handle successful login
+                if(response?.data?.token){
+                  store.setToken(response.data.token);
+                  localStorage.setItem('token',response?.data?.token);
 
-  // Go to dashboard
-  router.push({ name: "backend-pages-auth" });
+                  toast.fire("Success","User Loggin successfully.","success");
+                    router.push({ name: "home" });
+                }
+            })
+            .catch(error => {
+            // Handle login error
+            toast.fire("Oops...",error?.response?.data?.errorDescription, "error");
+            });
+
 }
 </script>
 

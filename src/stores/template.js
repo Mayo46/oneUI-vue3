@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 export const useTemplateStore = defineStore({
   id: "template",
   state: () => ({
+    token:'',
     // App vital details
     app: {
       name: "OneUI Vue Edition",
@@ -44,6 +45,9 @@ export const useTemplateStore = defineStore({
     },
   }),
   actions: {
+    setToken(newValue) {
+      this.token = newValue;
+    },
     // Sets the layout, useful for setting different layouts (under layouts/variations/)
     setLayout(payload) {
       this.layout.header = payload.header;

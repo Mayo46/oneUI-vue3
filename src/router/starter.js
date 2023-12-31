@@ -1,14 +1,15 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import NProgress from "nprogress/nprogress.js";
-
+import { useTemplateStore } from "@/stores/template";
+const store = useTemplateStore();
 // Main layouts
 import LayoutBackend from "@/layouts/variations/BackendStarter.vue";
 import LayoutSimple from "@/layouts/variations/Simple.vue";
 
 // Frontend: Landing
 const Landing = () => import("@/views/starter/LandingView.vue");
-// const AuthSignIn = () => import("@/views/auth/SignInView.vue");
+const AuthSignIn = () => import("@/views/auth/SignInView.vue");
 
 
 // Backend: Dashboard
@@ -16,16 +17,21 @@ const Dashboard = () => import("@/views/starter/DashboardView.vue");
 
 // Set all routes
 const routes = [
+  // {
+  //   path: "/",
+  //   component: LayoutSimple,
+  //   children: [
+  //     {
+  //       path: "",
+  //       name: "landing",
+  //       component: Landing,
+  //     },
+  //   ],
+  // },
   {
     path: "/",
-    component: LayoutSimple,
-    children: [
-      {
-        path: "",
-        name: "landing",
-        component: Landing,
-      },
-    ],
+    component: AuthSignIn,
+    name:"auth-signin"
   },
   {
     path: "/backend",
@@ -60,6 +66,11 @@ router.beforeResolve((to, from, next) => {
   NProgress.start();
   next();
 });
+
+router.beforeEach((to,from)=>{
+  console.log('store',to.fullPath)
+
+})
 
 router.afterEach((to, from) => {
   NProgress.done();

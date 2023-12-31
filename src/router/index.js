@@ -257,6 +257,7 @@ const Error404 = () => import("@/views/errors/404View.vue");
 const Error500 = () => import("@/views/errors/500View.vue");
 const Error503 = () => import("@/views/errors/503View.vue");
 
+const Home = () => import("@/views/home.vue");
 // Set all routes
 const routes = [
   /*
@@ -268,14 +269,21 @@ const routes = [
   */
   {
     path: "/",
-    component: LayoutLanding,
-    children: [
-      {
-        path: "",
-        name: "landing",
-        component: Landing,
-      },
-    ],
+    name: "auth-signin",
+    component: AuthSignIn,
+    // children: [
+    //   {
+    //     path: "",
+    //     name: "landing",
+    //     component: Landing,
+    //   },
+    // ],
+  },
+
+  {
+    path: "/home",
+    name: "home",
+    component: Home,
   },
 
   /*
@@ -1009,11 +1017,11 @@ const routes = [
     path: "/auth",
     component: LayoutSimple,
     children: [
-      {
-        path: "signin",
-        name: "auth-signin",
-        component: AuthSignIn,
-      },
+      // {
+      //   path: "signin",
+      //   name: "auth-signin",
+      //   component: AuthSignIn,
+      // },
       {
         path: "signin2",
         name: "auth-signin2",
@@ -1142,7 +1150,24 @@ const router = createRouter({
   },
   routes,
 });
-
+router.beforeEach((to,from,next)=>{
+  const token = localStorage.getItem('token');
+  if(to.fullPath !=='/' && !token){
+    return  next('/')
+  }
+  else{ 
+    if(token){
+       if(to.fullPath == '/'){
+          return next('/home')
+       }
+       else{
+          return next();
+       }
+    }  
+  
+  }
+  next(true);
+})
 // NProgress
 /*eslint-disable no-unused-vars*/
 NProgress.configure({ showSpinner: false });
